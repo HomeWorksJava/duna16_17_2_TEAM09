@@ -42,42 +42,11 @@ if(session.getAttribute("admin") !=null) {
 
 				<p>
 				</center>
-		</center>
+		 <tbody id="auctionstable">
 
-				<%
-					Class.forName("com.mysql.jdbc.Driver");
-					Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/auction", "auction", "auction");
+                                </tbody>
 
-					Statement st = con.createStatement();
-
-					String query = "SELECT * FROM auctions";
-
-					ResultSet rs = st.executeQuery(query);
-
-					while (rs.next()) {
-						int id = rs.getInt("id");
-						String Name = rs.getString("Item_name");
-						String Categ = rs.getString("Categories");
-						int bid = rs.getInt("Highest_bid");
-						String bid_name = rs.getString("Bidders_usrname");
-						String timelimit = rs.getString("Time_limit");
-						String status = rs.getString("Status");
-
-						// print the results
-						out.println(String.format(
-								"<tr> <td><sel><center>%d</center></sel></td>" +
-						"<td><sel><center>%s</center></sel></td>" +
-						"<td><sel><center>%s</center></sel></td>" +
-						"<td align='center'><form method='post' action='../admin/picdisplay.jsp'><input type='hidden' name='id' value='%s'><input type=submit class='btn btn-primary btn-block btn-large' value='Picture' ></form></td>" +
-						"<td><sel><center>%d</center></sel></td>" +
-						"<td><sel><center>%s</center></sel></td>" +
-						"<td><sel><center>%s</center></sel></td>" +
-						"<td><sel><center>%s</center></sel></td>",
-								id, Name, Categ, id, bid, bid_name, timelimit, status));
-
-					}
-					st.close();
-				%>
+				
 		</table>
 		<p>
 			<p>
@@ -96,5 +65,79 @@ if(session.getAttribute("admin") !=null) {
 	<td><input type="submit" class='btn btn-primary btn-block btn-large'  value="Logout" /></td>
 </form>
 </div>
+                <script>
+                    function loadTable(url, id)
+                    {
+                        var xmlHttp = new XMLHttpRequest();
+                         xmlHttp.open("GET", url , true);
+                         xmlHttp.setRequestHeader("Content-Type","application/json");
+                         xmlHttp.responseType = "json";
+
+                         xmlHttp.onload = function()
+                         {
+                          var table = document.getElementById(id);
+                          
+                            console.log(xmlHttp.response[0].categories);
+                            for(var x in xmlHttp.response)
+                            {
+                                var tr = document.createElement("tr");
+                                
+                                    var td1 = document.createElement("td");
+                                    td1.innerHTML = "<sel><center>" + xmlHttp.response[x].id + "</center></sel>";
+                                    
+                                    var td2 = document.createElement("td");
+                                    td2.innerHTML = "<sel><center>" + xmlHttp.response[x].itemName + "</center></sel>";
+                                    
+                                    var td3 = document.createElement("td");
+                                    if(xmlHttp.response[x].categories == null)
+                                        td3.innerHTML = "NULL";
+                                    else
+                                    td3.innerHTML = "<sel><center>" + xmlHttp.response[x].categories + "</center></sel>";
+                                                                       
+                                    var td4 = document.createElement("td");
+                                    td4.innerHTML = "<form method='get' action='../admin/picdisplay.jsp'><input type='hidden' name='id' value='" + xmlHttp.response[x].id + "'><input type=submit class='btn btn-primary btn-block btn-large' value='Picture' ></form>";
+                                    
+                                    var td5 = document.createElement("td");
+                                    td5.innerHTML = "<sel><center>" + xmlHttp.response[x].highestBid + "</center></sel>";
+                                    
+                                    var td6 = document.createElement("td");
+                                    if(xmlHttp.response[x].bidder == null)
+                                    td6.innerHTML = "<sel><center>" + "NULL" + "</center></sel>";
+                                    else
+                                    td6.innerHTML = "<sel><center>" + xmlHttp.response[x].bidder + "</center></sel>";
+                                    
+                                    var td7 = document.createElement("td");
+                                    td7.innerHTML = "<sel><center>" + xmlHttp.response[x].timeLimit + "</center></sel>";
+                                    
+                                    var td8 = document.createElement("td");
+                                    td8.innerHTML = "<sel><center>" + xmlHttp.response[x].status + "</center></sel>";
+                                    
+                                   
+
+                                 tr.appendChild(td1);
+                                 tr.appendChild(td2);
+                                 tr.appendChild(td3);
+                                 tr.appendChild(td4);
+                                 tr.appendChild(td5);
+                                 tr.appendChild(td6);
+                                 tr.appendChild(td7);
+                                 tr.appendChild(td8);
+                                 
+                              table.appendChild(tr);  
+                            }
+                         };                 
+                         xmlHttp.send();
+                    }                    
+            </script>
+             <script> loadTable("http://localhost:8080/Auction/rest/auction/osszes","auctionstable"); </script>
+            <script>
+                    function clearNodeById(id)
+                    {
+                        var myNode = document.getElementById(id);
+                            while (myNode.firstChild) {
+                                myNode.removeChild(myNode.firstChild);
+                            }
+                    }
+                    </script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+genericdaoservice/GenericDaoServiceImpl.class
+db/Dbconn.class
+servlets/Servlet.class
+api/AuctionService.class
+servlets/Pictures.class
+jpa/AuctionServiceImpl.class
+rest/Start.class
+datamodell/Auction_.class
+genericdaoservice/GenericDaoService.class
+datamodell/Auction.class
+servlets/Iteminsert.class
+db/Dbconn_Reg.class
+servlets/LogServlet.class
+config/Config.class
+servlets/Update.class
